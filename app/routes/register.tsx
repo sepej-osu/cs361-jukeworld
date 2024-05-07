@@ -248,6 +248,8 @@ import { verify } from "crypto";
               Submit
             </button>
           </form>
+          <br></br>
+          <span>We do not share your information with anyone.</span>
         </div>
         <div className="links">
           <ul>

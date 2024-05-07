@@ -48,6 +48,24 @@ export default function IndexRoute() {
               </ul>
             </nav>
           )}
+          <br></br>
+          <div>
+            <h2>About</h2>
+            <p>JukeWorld is a new online space where music lovers can come together to share and enjoy music globally</p>
+            <h2>Upcoming Features</h2>
+            <p>We are currently in the early stages of the website. We currently have a way to register an account and log in. There are many cool features coming such as:</p>
+            <ul>
+              <li>
+                <b>Listening to music:</b> This will allow users to discover new music from around the world.
+              </li>
+              <li>
+                <b>Adding songs to the global playlist for everyone to hear:</b> Share your favorite music with everyone on the platform and contribute to a diverse and global music experience.
+              </li>
+              <li>
+                <b>Liking songs so they show up in your profile:</b> Curate your music preferences and revisit your liked songs.
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     );
