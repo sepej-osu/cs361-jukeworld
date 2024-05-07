@@ -1,5 +1,8 @@
 {
   "name": "jukeworld",
+  "prisma": {
+    "seed": "ts-node --require tsconfig-paths/register prisma/seed.ts"
+  },
   "private": true,
   "sideEffects": false,
   "type": "module",
@@ -11,15 +14,19 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@prisma/client": "^5.13.0",
     "@remix-run/node": "^2.9.1",
     "@remix-run/react": "^2.9.1",
     "@remix-run/serve": "^2.9.1",
+    "bcryptjs": "^2.4.3",
     "isbot": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.9.1",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20.12.10",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
@@ -30,7 +37,10 @@
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "typescript": "^5.1.6",
+    "prisma": "^5.13.0",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.4.5",
     "vite": "^5.1.0",
     "vite-tsconfig-paths": "^4.2.1"
   },
