@@ -9,7 +9,6 @@ export function VideoPlayer() {
   const loaderData: any = useLoaderData();
   // Initialize state for width
   const [playing, setPlaying] = useState(false);
-  const [inline, setInline] = useState(false);
   const [muted, setMuted] = useState(true);
   const [url, setUrl] = useState(loaderData.youtubeUrl);
   const [data, setData] = useState(loaderData);
@@ -74,9 +73,9 @@ export function VideoPlayer() {
     };
     setTimeout(() => {
       setRemoved(true);
-      console.log(nextSongData);
-      setData((prevData: any) => ({ 
-        ...prevData, 
+      //console.log(nextSongData);
+      setData((data: any) => ({ 
+        ...data, 
         current_song_data: currentSongData, 
         next_song_data: nextSongData 
       }));
@@ -96,7 +95,6 @@ export function VideoPlayer() {
                   muted={muted}
                   width='500px'
                   height='500px'
-                  playsinline={inline}
                   onReady={handleReady} // Added onReady prop
                   onProgress={handleProgress}
                   onBufferEnd={handleBuffered}
