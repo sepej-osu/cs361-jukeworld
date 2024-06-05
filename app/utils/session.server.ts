@@ -1,4 +1,4 @@
-import { createCookieSessionStorage, redirect } from "@remix-run/node";
+import { createCookieSessionStorage, redirect, LoaderFunctionArgs } from "@remix-run/node";
 import bcrypt from "bcryptjs";
 
 import { db } from "./db.server";
@@ -6,12 +6,13 @@ import { db } from "./db.server";
 type LoginForm = {
   password: string;
   username: string;
+  profileImage: string;
 };
 
-export async function register({ password, username }: LoginForm) {
+export async function register({ password, username, profileImage }: LoginForm) {
   const passwordHash = await bcrypt.hash(password, 10);
   const user = await db.user.create({
-    data: { passwordHash, username },
+    data: { passwordHash, username, profileImage },
   });
   return { id: user.id, username };
 }
@@ -85,7 +86,7 @@ export async function getUser(request: Request) {
   }
 
   const user = await db.user.findUnique({
-    select: { id: true, username: true },
+    select: { id: true, username: true, profileImage: true },
     where: { id: userId },
   });
 
@@ -96,6 +97,14 @@ export async function getUser(request: Request) {
   return user;
 }
 
+export async function loader({ params }: LoaderFunctionArgs) {
+  const response = await fetch('http://192.168.1.76:5006/random-profile-image');
+  const data = await response.json();
+  let profile_image = data.image_url;
+  console.log(profile_image);
+  return profile_image
+};
+
 export async function logout(request: Request) {
   const session = await getUserSession(request);
   return redirect("/", {
@@ -105,9 +114,10 @@ export async function logout(request: Request) {
   });
 }
 
-export async function createUserSession(userId: string, redirectTo: string) {
+export async function createUserSession(userId: string, redirectTo: string, profileImage: string) {
   const session = await storage.getSession();
   session.set("userId", userId);
+  session.set("userProfileImage", profileImage);
   return redirect(redirectTo, {
     headers: {
       "Set-Cookie": await storage.commitSession(session),

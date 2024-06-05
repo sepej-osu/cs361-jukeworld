@@ -4,19 +4,16 @@ import type {
     MetaFunction,
   } from "@remix-run/node";
   import {
-    Form,
     Link,
     useActionData,
     useSearchParams,
   } from "@remix-run/react";
   
-  import stylesUrl from "~/styles/login.css";
-  import { db } from "~/utils/db.server";
+  import stylesUrl from "~/styles/login.css?url";
   import { badRequest } from "~/utils/request.server";
   import {
     createUserSession,
     login,
-    register,
   } from "~/utils/session.server";
   
   export const links: LinksFunction = () => [
@@ -25,7 +22,7 @@ import type {
   
   export const meta: MetaFunction = () => {
     const description =
-      "Login to submit your own jokes to Remix Jokes!";
+      "Login to listen and submit songs!";
   
     return [
       { name: "description", content: description },
@@ -47,11 +44,11 @@ import type {
   }
   
   function validateUrl(url: string) {
-    const urls = ["/jokes", "/", "https://remix.run"];
+    const urls = ["/",];
     if (urls.includes(url)) {
       return url;
     }
-    return "/jokes";
+    return "/asdf";
   }
   
   export const action = async ({
@@ -99,28 +96,6 @@ import type {
             fields,
             formError:
               "Username/Password combination is incorrect",
-          });
-        }
-        return createUserSession(user.id, redirectTo);
-      }
-      case "register": {
-        const userExists = await db.user.findFirst({
-          where: { username },
-        });
-        if (userExists) {
-          return badRequest({
-            fieldErrors: null,
-            fields,
-            formError: `User with username ${username} already exists`,
-          });
-        }
-        const user = await register({ username, password });
-        if (!user) {
-          return badRequest({
-            fieldErrors: null,
-            fields,
-            formError:
-              "Something went wrong trying to create a new user.",
           });
         }
         return createUserSession(user.id, redirectTo);

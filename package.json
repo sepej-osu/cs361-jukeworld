@@ -21,7 +21,11 @@
     "bcryptjs": "^2.4.3",
     "isbot": "^4.1.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-player": "^2.16.0",
+    "react-youtube": "^10.1.0",
+    "remix-utils": "^7.6.0",
+    "wretch": "^2.9.0"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.9.1",

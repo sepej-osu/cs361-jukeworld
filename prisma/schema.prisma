@@ -16,18 +16,5 @@ model User {
   updatedAt    DateTime @updatedAt
   username     String   @unique
   passwordHash String
-  songs        Song[] @relation("UserSongs")
-  likedSongs   Song[] @relation("UserLikes")
-}
-
-model Song {
-  id         String   @id @default(uuid())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  artist     String
-  song       String
-  content    String
-  likedBy    User[] @relation("UserLikes")
-  userId  String @map("user_id")
-  user    User   @relation("UserSongs", fields: [userId], references: [id])
+  profileImage String
 }

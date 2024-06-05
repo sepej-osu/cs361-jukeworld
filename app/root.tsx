@@ -13,9 +13,9 @@ import {
 } from "@remix-run/react";
 import type { PropsWithChildren } from "react";
 
-import globalLargeStylesUrl from "~/styles/global-large.css";
-import globalMediumStylesUrl from "~/styles/global-medium.css";
-import globalStylesUrl from "~/styles/global.css";
+import globalLargeStylesUrl from "~/styles/global-large.css?url";
+import globalMediumStylesUrl from "~/styles/global-medium.css?url";
+import globalStylesUrl from "~/styles/global.css?url";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: globalStylesUrl },
@@ -54,7 +54,7 @@ function Document({
           name="viewport"
           content="width=device-width, initial-scale=1"
         />
-        <meta name="keywords" content="Remix,jokes" />
+        <meta name="keywords" content="Remix,music" />
         <meta
           name="twitter:image"
           content="https://remix-jokes.lol/social.png"
@@ -66,6 +66,7 @@ function Document({
         <meta name="twitter:creator" content="@remix_run" />
         <meta name="twitter:site" content="@remix_run" />
         <meta name="twitter:title" content="Remix Jokes" />
+        <meta name="referrer" content="no-referrer-when-downgrade" />
         <Meta />
         {title ? <title>{title}</title> : null}
         <Links />

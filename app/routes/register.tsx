@@ -2,21 +2,21 @@ import type {
     ActionFunctionArgs,
     LinksFunction,
     MetaFunction,
+    LoaderFunctionArgs,
   } from "@remix-run/node";
   import {
-    Form,
     Link,
     useActionData,
     useSearchParams,
+    useLoaderData,
   } from "@remix-run/react";
 import { verify } from "crypto";
   
-  import stylesUrl from "~/styles/login.css";
+  import stylesUrl from "~/styles/login.css?url";
   import { db } from "~/utils/db.server";
   import { badRequest } from "~/utils/request.server";
   import {
     createUserSession,
-    login,
     register,
   } from "~/utils/session.server";
   
@@ -26,13 +26,21 @@ import { verify } from "crypto";
   
   export const meta: MetaFunction = () => {
     const description =
-      "Login to submit your own jokes to Remix Jokes!";
+      "Login to submit songs to play!";
   
     return [
       { name: "description", content: description },
       { name: "twitter:description", content: description },
       { title: "JukeWorld | Login" },
     ];
+  };
+
+  export async function loader({ params }: LoaderFunctionArgs) {
+    const response = await fetch('http://192.168.1.76:5006/random-profile-image');
+    const data = await response.json();
+    let profile_image = data.image_url;
+    console.log(profile_image);
+    return profile_image
   };
   
   function validateUsername(username: string) {
@@ -46,6 +54,11 @@ import { verify } from "crypto";
       return "Passwords must be at least 6 characters long";
     }
   }
+  function validateProfileImage(profileImage: string) {
+    if (profileImage.length < 0) {
+      return "profile image not found";
+    }
+  }
   function validatePasswordVerify(password: string, passwordverify: string) {
     if (password != passwordverify) {
       return "Passwords do not match";
@@ -53,11 +66,11 @@ import { verify } from "crypto";
   }
   
   function validateUrl(url: string) {
-    const urls = ["/jokes", "/", "https://remix.run"];
+    const urls = ["/", "/register", "https://remix.run"];
     if (urls.includes(url)) {
       return url;
     }
-    return "/jokes";
+    return "/";
   }
   
   export const action = async ({
@@ -68,14 +81,17 @@ import { verify } from "crypto";
     const password = form.get("password");
     const passwordverify = form.get("passwordverify");
     const username = form.get("username");
+    const profileImage = form.get("profileImage");
     const redirectTo = validateUrl(
       (form.get("redirectTo") as string) || "/"
     );
+    
     if (
       typeof loginType !== "string" ||
       typeof password !== "string" ||
       typeof passwordverify !== "string" ||
-      typeof username !== "string"
+      typeof username !== "string" || 
+      typeof profileImage !== "string"
     ) {
       return badRequest({
         fieldErrors: null,
@@ -84,11 +100,12 @@ import { verify } from "crypto";
       });
     }
   
-    let fields = { loginType, password, passwordverify, username };
+    let fields = { loginType, password, passwordverify, username, profileImage };
     const fieldErrors = {
       password: validatePassword(password),
       passwordverify: validatePasswordVerify(password, passwordverify),
       username: validateUsername(username),
+      profileImage: validateProfileImage(profileImage),
     };
     if (Object.values(fieldErrors).some(Boolean)) {
       return badRequest({
@@ -110,7 +127,7 @@ import { verify } from "crypto";
             formError: `User with username ${username} already exists`,
           });
         }
-        const user = await register({ username, password });
+        const user = await register({ username, password, profileImage });
         if (!user) {
           return badRequest({
             fieldErrors: null,
@@ -130,10 +147,14 @@ import { verify } from "crypto";
       }
     }
   };
+
+  
   
   export default function Register() {
     const actionData = useActionData<typeof action>();
     const [searchParams] = useSearchParams();
+    const profile_image = useLoaderData<typeof loader>()
+
     return (
       <div className="container">
         <div className="content" data-light="">
@@ -164,6 +185,13 @@ import { verify } from "crypto";
               </label>
             </fieldset>
             <div>
+              <input
+                id="profile-image"
+                name="profileImage"
+                type="hidden"
+                value={profile_image}
+              />
+
               <label htmlFor="username-input">Username</label>
               <input
                 type="text"

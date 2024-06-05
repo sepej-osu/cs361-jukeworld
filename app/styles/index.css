@@ -21,11 +21,11 @@
   }
   
   .content {
-    padding-top: 3rem;
+    padding-top: 1rem;
     padding-bottom: 3rem;
   }
   
-  h1 {
+  h1, #jukeworld-inline, #username {
     margin: 0;
     text-shadow: 0 3px 0 rgba(0, 0, 0, 0.75);
     text-align: center;
@@ -67,10 +67,26 @@
       gap: 1.5rem;
     }
   }
+
+  #profileImage {
+    border-radius: 50%;
+  }
+
+  #user-card {
+    justify-content: center;
+    text-align: right;
+    font-size: larger;
+    font-weight: bold;
+  }
+
+  #logout-button {
+    height: 25px;
+    width: 75px;
+  }
   
   @media screen and (min-width: 1024px) {
     h1 span {
-      font-size: 8rem;
+      font-size: 5rem;
     }
   }
   
