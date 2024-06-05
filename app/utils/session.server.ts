@@ -2,22 +2,26 @@ import { createCookieSessionStorage, redirect, LoaderFunctionArgs } from "@remix
 import bcrypt from "bcryptjs";
 
 import { db } from "./db.server";
+import wretch from 'wretch';
 
 type LoginForm = {
   password: string;
   username: string;
-  profileImage: string;
+  profileImage?: string;
 };
 
 export async function register({ password, username, profileImage }: LoginForm) {
   const passwordHash = await bcrypt.hash(password, 10);
+  const response = await wretch('http://192.168.1.76:5006/random-profile-image').get();
+  const data: any = await response.json();
+  profileImage = profileImage || data.image_url;
   const user = await db.user.create({
     data: { passwordHash, username, profileImage },
   });
   return { id: user.id, username };
 }
 
-export async function login({ password, username }: LoginForm) {
+export async function login({ password, username, profileImage }: LoginForm) {
   const user = await db.user.findUnique({
     where: { username },
   });
@@ -97,14 +101,6 @@ export async function getUser(request: Request) {
   return user;
 }
 
-export async function loader({ params }: LoaderFunctionArgs) {
-  const response = await fetch('http://192.168.1.76:5006/random-profile-image');
-  const data = await response.json();
-  let profile_image = data.image_url;
-  console.log(profile_image);
-  return profile_image
-};
-
 export async function logout(request: Request) {
   const session = await getUserSession(request);
   return redirect("/", {
@@ -114,7 +110,7 @@ export async function logout(request: Request) {
   });
 }
 
-export async function createUserSession(userId: string, redirectTo: string, profileImage: string) {
+export async function createUserSession(userId: string, redirectTo: string, profileImage?: string) {
   const session = await storage.getSession();
   session.set("userId", userId);
   session.set("userProfileImage", profileImage);

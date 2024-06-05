@@ -7,10 +7,10 @@ export function SearchAdd() {
   const [loading, setLoading] = useState(false);
   const [songadded, setAdded] = useState(false);
 
-  const handleSearch = async (event) => {
+  const handleSearch = async (event: any) => {
     event.preventDefault();
     try {
-      const response = await wretch(`http://127.0.0.1:5003/search/${query}`, { mode: "cors" }).get().json();
+      const response: any = await wretch(`http://127.0.0.1:5003/search/${query}`, { mode: "cors" }).get().json();
 
       let json_array = JSON.parse(response);
       setSongs(json_array);
@@ -54,7 +54,7 @@ export function SearchAdd() {
     ) : (
       <>
         {songs.length > 0 && <p>Found results:</p>}
-        {songs.map((song, index) => (
+        {songs.map((song: any, index) => (
           <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '15px', cursor: 'pointer', backgroundColor: 'rgba(0, 0, 0, 0.20)', paddingTop: '10px', paddingBottom: '10px' }} onClick={() => handleSongClick(song.videoId)} >
             <img src={song.thumbnail} alt={song.title} height='75px' width='75px' style={{ marginLeft: '10px', border: '1px solid white', boxShadow: '0 1px 0 rgba(0, 0, 0, 0.75)' }} />
             <div style={{ marginLeft: '20px', fontWeight: 'bold', fontSize: '18px' }}>

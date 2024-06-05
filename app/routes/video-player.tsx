@@ -6,12 +6,12 @@ import wretch from 'wretch';
 
 
 export function VideoPlayer() {
-  const loaderData = useLoaderData();
+  const loaderData: any = useLoaderData();
   // Initialize state for width
   const [playing, setPlaying] = useState(false);
   const [inline, setInline] = useState(false);
   const [muted, setMuted] = useState(true);
-  const [url, setUrl] = useState(useLoaderData().youtubeUrl);
+  const [url, setUrl] = useState(loaderData.youtubeUrl);
   const [data, setData] = useState(loaderData);
   
   const [songRemoved, setRemoved] = useState(false);
@@ -31,25 +31,39 @@ export function VideoPlayer() {
   };
 
   const handleEnd = async () => {
-    event.preventDefault();
-    // Add a delay of 2 seconds
+    //event.preventDefault();
+    // add a delay of 1 seconds
+    // get next song
     await new Promise(resolve => setTimeout(resolve, 1000));
-    const response = await wretch(`http://127.0.0.1:5001/get_timestamped_url`, { mode: "cors" }).get().json();
+    const response: any = await wretch(`http://127.0.0.1:5001/get_timestamped_url`, { mode: "cors" }).get().json();
     console.log(response);
+    // set url to the next song
     setUrl(response.url);
-    let nextSong = '';
-    let nextSongData: unknown;
+
+    // update the playlist
+    let currentSong;
+    let currentSongData: any;
+    let nextSong;
+    let nextSongData: any;
     try {
-      const response = await wretch('http://127.0.0.1:5002/remove/' + videoId, { mode: "cors" }).get();
-      console.log(response.text());
-      const response3 = await wretch('http://127.0.0.1:5002/next_songs').get();
-      nextSong = await response3.text();
-      console.log("THE NEXT SONG");
+      const response = await wretch('http://127.0.0.1:5002/current_song', { mode: "cors" }).get();
+      console.log("THE NEW CURRENT SONG");
+      currentSong = await response.text();
+      console.log(currentSong);
+
+      const response2 = await wretch('http://127.0.0.1:5002/next_songs').get();
+      nextSong = await response2.text();
+      console.log("THE NEW NEXT SONG");
       console.log(nextSong);
     } catch (error) {
       console.error("An error occurred:", error);
     };
     try {
+      const response3 = await wretch('http://127.0.0.1:5003/song_info/'+ currentSong).get();
+      const current_song_data = await response3.json();
+      console.log(current_song_data);
+      currentSongData = current_song_data;
+
       const response4 = await wretch('http://127.0.0.1:5003/song_info/'+ nextSong).get();
       const next_song_data = await response4.json();
       console.log(next_song_data);
@@ -61,7 +75,11 @@ export function VideoPlayer() {
     setTimeout(() => {
       setRemoved(true);
       console.log(nextSongData);
-      setData((prevData: any) => ({ ...prevData, next_song_data: nextSongData }));
+      setData((prevData: any) => ({ 
+        ...prevData, 
+        current_song_data: currentSongData, 
+        next_song_data: nextSongData 
+      }));
       setRemoved(true);
     }, 1000);
     setTimeout(() => {

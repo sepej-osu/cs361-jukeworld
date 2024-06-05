@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import wretch from 'wretch';
 
 export function Playlist() {
-  const loaderData = useLoaderData();
+  const loaderData: any = useLoaderData();
   const [data, setData] = useState(loaderData);
   
   const [songRemoved, setRemoved] = useState(false);
