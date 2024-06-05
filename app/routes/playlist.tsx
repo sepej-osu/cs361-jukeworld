@@ -2,9 +2,8 @@ import { useLoaderData } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import wretch from 'wretch';
 
-export function Playlist() {
+export function Playlist({ songData, setSongData }) {
   const loaderData: any = useLoaderData();
-  const [data, setData] = useState(loaderData);
   
   const [songRemoved, setRemoved] = useState(false);
 
@@ -51,11 +50,10 @@ export function Playlist() {
     setTimeout(() => {
       setRemoved(true);
       //console.log(nextSongData);
-      setData((data: any) => ({ 
-        ...data, 
+      setSongData({
         current_song_data: currentSongData, 
-        next_song_data: nextSongData 
-      }));
+        next_song_data: nextSongData
+      });
       setRemoved(true);
     }, 1000);
     setTimeout(() => {
@@ -67,20 +65,20 @@ export function Playlist() {
     <div>
       <div style={{ marginBottom: '15px', marginTop: '15px' }} >Currently Playing:</div>
       <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
-        <img src={data.current_song_data.thumbnail} alt={data.current_song_data.title} height='75px' width='75px' id="" style={{ marginLeft: '10px', border: '1px solid white', boxShadow: '0 1px 0 rgba(0, 0, 0, 0.75)' }} />
+        <img src={songData.current_song_data.thumbnail} alt={songData.current_song_data.title} height='75px' width='75px' id="" style={{ marginLeft: '10px', border: '1px solid white', boxShadow: '0 1px 0 rgba(0, 0, 0, 0.75)' }} />
         <div style={{ marginLeft: '20px', fontWeight: 'bold', fontSize: '18px' }}>
-          {data.current_song_data.title}<br />{data.current_song_data.artist}
+          {songData.current_song_data.title}<br />{songData.current_song_data.artist}
         </div>
       </div>
       
       <div style={{ marginBottom: '10px'}}>Up Next:</div>
       
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px', cursor: 'pointer', backgroundColor: 'rgba(0, 0, 0, 0.20)', paddingTop: '10px', paddingBottom: '10px' }} onClick={() => handleSongRemoveClick(data.next_song_data.videoId)} >
-        <img src={data.next_song_data.thumbnail} alt={data.next_song_data.title} height='75px' width='75px' id="" style={{ marginLeft: '10px', border: '1px solid white', boxShadow: '0 1px 0 rgba(0, 0, 0, 0.75)' }} />
+      <div className='hoverRemove' style={{ display: 'flex', alignItems: 'center', marginBottom: '15px', cursor: 'pointer', paddingTop: '10px', paddingBottom: '10px' }} onClick={() => handleSongRemoveClick(songData.next_song_data.videoId)} >
+        <img src={songData.next_song_data.thumbnail} alt={songData.next_song_data.title} height='75px' width='75px' id="" style={{ marginLeft: '10px', border: '1px solid white', boxShadow: '0 1px 0 rgba(0, 0, 0, 0.75)' }} />
         <div style={{ marginLeft: '20px', fontWeight: 'bold', fontSize: '18px' }}>
-          {data.next_song_data.title}<br />{data.next_song_data.artist}
+          {songData.next_song_data.title}<br />{songData.next_song_data.artist}
         </div>
-        <div style={{ flex: 1, alignItems: 'right', textAlign:'right', marginRight: '10px', cursor: 'pointer'}} >❌</div>
+        <div className='hoverRemoveX' style={{ flex: 1, alignItems: 'right', textAlign:'right', marginRight: '10px', cursor: 'pointer'}} >❌</div>
       </div>
       {songRemoved ? (<div style={{ display: 'flex', justifyContent: 'center', marginBottom: '15px' }}><p>Song removed from the playlist</p></div>) : (<span></span>)}
     </div>

@@ -3,11 +3,11 @@ import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 
 import stylesUrl from "~/styles/index.css?url";
-import { db } from "~/utils/db.server";
 import { getUser } from "~/utils/session.server";
 import { VideoPlayer } from './video-player'
 import { Playlist } from "./playlist";
 import { SearchAdd } from "./searchadd";
+import { useState } from "react";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesUrl },
@@ -40,7 +40,11 @@ export const loader = async ({
 
 export default function IndexRoute() {
   const data = useLoaderData<typeof loader>();
-
+  
+  const [songData, setSongData] = useState({ current_song_data: data.current_song_data,
+    next_song_data: data.next_song_data
+  });
+  
   
   return (
       <div className="container">
@@ -71,10 +75,16 @@ export default function IndexRoute() {
                 </div>
                 </div>
               <div>
-              <VideoPlayer />
+              <VideoPlayer
+              songData={songData}
+              setSongData={setSongData} />
               </div>
-              <Playlist />
-              <SearchAdd />
+              <Playlist
+              songData={songData}
+              setSongData={setSongData} />
+              <SearchAdd
+              songData={songData}
+              setSongData={setSongData} />
             </div>
           ) : (
             <nav>

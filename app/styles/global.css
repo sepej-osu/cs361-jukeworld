@@ -359,3 +359,24 @@
     padding: 0.5rem 1rem;
   }
   
+  .hoverRemove {
+    background-color: transparent;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .hoverRemove:hover {
+    background-color: rgba(0, 0, 0, 0.20);
+  }
+
+  .hoverRemove:hover .hoverRemove {
+    background-color: rgba(0, 0, 0, 0.20);
+  }
+
+  .hoverRemoveX {
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+  
+  .hoverRemove:hover .hoverRemoveX {
+    opacity: 1;
+  }

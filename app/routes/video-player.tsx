@@ -5,13 +5,14 @@ import { useEffect, useState } from "react";
 import wretch from 'wretch';
 
 
-export function VideoPlayer() {
+export function VideoPlayer({ songData, setSongData }) {
   const loaderData: any = useLoaderData();
   // Initialize state for width
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(true);
   const [url, setUrl] = useState(loaderData.youtubeUrl);
-  const [data, setData] = useState(loaderData);
+
+  const [update, setUpdate] = useState(loaderData);
   
   const [songRemoved, setRemoved] = useState(false);
 
@@ -72,22 +73,24 @@ export function VideoPlayer() {
       console.error("An error occurred:", error);
     };
     setTimeout(() => {
-      setRemoved(true);
+      //setUpdate(true);
       //console.log(nextSongData);
-      setData((data: any) => ({ 
-        ...data, 
+      setSongData({
         current_song_data: currentSongData, 
         next_song_data: nextSongData 
-      }));
-      setRemoved(true);
+      });
+      console.log("UPDATED DATA");
+      console.log(songData);
+      //setUpdate(true);
     }, 1000);
     setTimeout(() => {
-      setRemoved(false);
+      //setUpdate(false);
     }, 3000);
   };
   
   
   return (
+    <div>
       <ClientOnly fallback={<div>Video</div>}>
         {() => (<ReactPlayer
                   url={url}
@@ -95,6 +98,7 @@ export function VideoPlayer() {
                   muted={muted}
                   width='500px'
                   height='500px'
+                  volume='0.1'
                   onReady={handleReady} // Added onReady prop
                   onProgress={handleProgress}
                   onBufferEnd={handleBuffered}
@@ -108,5 +112,6 @@ export function VideoPlayer() {
                   }}
                 />)}
       </ClientOnly>
+    </div>
   );
 }
